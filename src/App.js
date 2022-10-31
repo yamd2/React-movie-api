@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+
+import { Container } from "react-bootstrap";
+import { Title } from "./components/Title";
+import { SearchForm } from "./components/SearchForm";
+import { MovieList } from "./components/MovieList";
+import { CustomCard } from "./components/CustomCard";
+import { useState } from "react";
 
 function App() {
+  const [movieList, setMovieList] = useState([]);
+
+  const addMovie = (movie) => {
+    setMovieList([...movieList, movie]);
+  };
+  console.log(movieList);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="wrapper">
+      <Container>
+        <Title />
+        <SearchForm func={addMovie} />
+        <MovieList />
+      </Container>
     </div>
   );
 }
