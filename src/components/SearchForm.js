@@ -3,14 +3,12 @@ import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { fetchData } from "../utils/axiosHelper";
 import { CustomCard } from "./CustomCard";
 
-export const SearchForm = () => {
+export const SearchForm = ({ func }) => {
   const [form, setForm] = useState("");
-
   const [movie, setMovie] = useState({});
-
   const [isError, setIsError] = useState(false);
 
-  const handleOnChange = (e) => {
+  const handlOnChange = (e) => {
     const { value } = e.target;
     setForm(value);
   };
@@ -27,35 +25,53 @@ export const SearchForm = () => {
     } else {
       setIsError(true);
     }
+  };
 
-    setMovie(data);
+  const handleOnAddToList = (movie) => {
+    //send movie to parent component
+    func(movie);
+    //reset the movie state so the card is not showing after add movie to the list
+    setMovie({});
+
+    //rest the input fild so that there is no text ihe input filed
+    setForm("");
+  };
+
+  const removeDisplay = () => {
+    setMovie({});
+    setForm("");
   };
   return (
-    <div className="bg-dark py-5 rounded">
+    <div className="bg-dark py-5 rounded p-2">
       <Form onSubmit={handleOnSubmit}>
         <Row className="g-2">
           <Col className="d-flex justify-content-center">
-            <div
-              className="d-flex justify-content-center"
-              style={{ width: "50%" }}
-            >
+            <div className="d-flex" style={{ width: "60%" }}>
               <Form.Control
-                onChange={handleOnChange}
+                onChange={handlOnChange}
                 placeholder="Movie Name..."
                 required
+                value={form}
               />
               <div className="d-grid">
                 <Button varient="primary" type="submit">
-                  {" "}
-                  Search{" "}
+                  Search
                 </Button>
               </div>
             </div>
           </Col>
         </Row>
       </Form>
-      <div className="mt-3 d-flex  justify-content-center">
-        {movie.imdbID && <CustomCard movie={movie} />}
+
+      <div className="mt-3 d-flex justify-content-center">
+        {movie?.imdbID && (
+          <CustomCard
+            movie={movie}
+            func={handleOnAddToList}
+            removeDisplay={removeDisplay}
+          />
+        )}
+
         {isError && (
           <Alert variant="danger">
             No movie found, change the name and search it again.
